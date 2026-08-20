@@ -37,18 +37,43 @@ O resultado permite que um gestor tenha, diariamente, uma visão clara de quem e
 
 ```
 env.env (texto puro, uso único)
-        │  criptografar_credenciais.py
+        │  utils/criptografar_credenciais.py
         ▼
 credenciais.enc  (AES-256-GCM + PBKDF2, 600k iterações)
-        │  env_ler.py
+        │  utils/env_ler.py
         ▼
 credenciais em memória, nunca em disco
         │  (opcional, p/ execução agendada sem interação)
         ▼
-dpapi_util.py → Windows DPAPI (vincula a senha mestra à conta + máquina)
+utils/dpapi_util.py → Windows DPAPI (vincula a senha mestra à conta + máquina)
 ```
 
 > O robô de extração (`exportar_wms_produtividade.py`) foi escrito para um sistema ERP/WMS genérico via Selenium. Nomes de sistema, URLs e variáveis de ambiente foram generalizados neste repositório público.
+
+---
+
+## 📁 Estrutura do repositório
+
+```
+produtividade-separacao/
+├── src/
+│   ├── scripts/            # pipeline principal (roda em sequência)
+│   │   ├── exportar_wms_produtividade.py
+│   │   ├── tratamento_produtividade.py
+│   │   ├── indicadores_produtividade.py
+│   │   ├── gerar_painel_html.py
+│   │   ├── editor_funcionarios.py
+│   │   └── gerar_base_exemplo.py
+│   └── utils/               # utilitários de apoio (segurança/credenciais)
+│       ├── criptografar_credenciais.py
+│       ├── env_ler.py
+│       └── dpapi_util.py
+├── docs/                    # imagens do dashboard (README)
+├── base/                    # dados gerados em tempo de execução (não versionado)
+├── requirements.txt
+├── LICENSE
+└── README.md
+```
 
 ---
 
@@ -56,14 +81,15 @@ dpapi_util.py → Windows DPAPI (vincula a senha mestra à conta + máquina)
 
 | Arquivo | Responsabilidade |
 |---|---|
-| `exportar_wms_produtividade.py` | Robô Selenium que autentica no WMS e exporta a extração bruta (.xls) sem intervenção manual |
-| `tratamento_produtividade.py` | Limpeza, deduplicação e regras de negócio: agrupamento por tarefa, classificação separador/operador, tratamento de virada de turno |
-| `indicadores_produtividade.py` | Cálculo de métricas por colaborador/dia: caixas separadas, cx/hora, % da meta, hora normal vs. extra, classificação (vermelho/amarelo/verde/estrela) |
-| `gerar_painel_html.py` | Gera o dashboard HTML self-contained (sem backend) — visão geral em ranking + detalhe individual ao clicar |
-| `editor_funcionarios.py` | Interface Streamlit para cadastro manual de papel/turno de cada colaborador, protegida por chave mestra, com log de auditoria completo |
-| `criptografar_credenciais.py` | Criptografa credenciais de acesso ao WMS em AES-256-GCM, derivando a chave via PBKDF2 (nunca salva a chave em disco) |
-| `env_ler.py` | Descriptografa as credenciais na hora do uso; suporta execução manual (senha digitada) ou agendada (via DPAPI) |
-| `dpapi_util.py` | Wrapper do Windows DPAPI, usado apenas para viabilizar execução automática/agendada sem expor a senha mestra em texto puro |
+| `src/scripts/exportar_wms_produtividade.py` | Robô Selenium que autentica no WMS e exporta a extração bruta (.xls) sem intervenção manual |
+| `src/scripts/tratamento_produtividade.py` | Limpeza, deduplicação e regras de negócio: agrupamento por tarefa, classificação separador/operador, tratamento de virada de turno |
+| `src/scripts/indicadores_produtividade.py` | Cálculo de métricas por colaborador/dia: caixas separadas, cx/hora, % da meta, hora normal vs. extra, classificação (vermelho/amarelo/verde/estrela) |
+| `src/scripts/gerar_painel_html.py` | Gera o dashboard HTML self-contained (sem backend) — visão geral em ranking + detalhe individual ao clicar |
+| `src/scripts/editor_funcionarios.py` | Interface Streamlit para cadastro manual de papel/turno de cada colaborador, protegida por chave mestra, com log de auditoria completo |
+| `src/scripts/gerar_base_exemplo.py` | Gera uma base 100% fictícia (nomes genéricos, números aleatórios) para testar o pipeline sem dados reais |
+| `src/utils/criptografar_credenciais.py` | Criptografa credenciais de acesso ao WMS em AES-256-GCM, derivando a chave via PBKDF2 (nunca salva a chave em disco) |
+| `src/utils/env_ler.py` | Descriptografa as credenciais na hora do uso; suporta execução manual (senha digitada) ou agendada (via DPAPI) |
+| `src/utils/dpapi_util.py` | Wrapper do Windows DPAPI, usado apenas para viabilizar execução automática/agendada sem expor a senha mestra em texto puro |
 
 ---
 
@@ -82,6 +108,9 @@ dpapi_util.py → Windows DPAPI (vincula a senha mestra à conta + máquina)
 - Visão geral: ranking dos colaboradores com % da meta, cx/hora médio, classificação por cor.
 - Ao clicar em um nome: detalhe tarefa a tarefa, evolução da produtividade ao longo do turno, tempo parado entre tarefas.
 - Busca com Fuse.js (busca fuzzy) para localizar rapidamente qualquer colaborador.
+- Central de ajuda embutida, com busca em linguagem natural, pensada para quem vai usar o painel no dia a dia sem contexto técnico.
+
+> 💡 **Quer navegar no dashboard de verdade, não só ver print?** Baixe este repositório (botão "Code" → "Download ZIP") e abra `painel_produtividade.html` direto no navegador — já vem com dados fictícios de exemplo, prontos para clicar e explorar.
 
 > As imagens abaixo foram geradas a partir de `gerar_base_exemplo.py` — uma base 100% fictícia, com nomes genéricos e números aleatórios, incluída neste repositório só para ilustrar o resultado final. Nenhum dado real aparece aqui.
 
@@ -105,22 +134,24 @@ dpapi_util.py → Windows DPAPI (vincula a senha mestra à conta + máquina)
 
 ![Tendência de 90 dias](docs/dashboard-tendencia-90dias-v2.png)
 
+**Central de ajuda embutida — busca em linguagem natural:**
 
+![Central de ajuda](docs/dashboard-central-ajuda.png)
+
+---
 
 ## 🧑‍💼 Governança de dados (Streamlit)
-
-> Print também gerado a partir da base fictícia (`gerar_base_exemplo.py`), sem nenhum dado real.
-
-![Editor de funcionários](docs/dashboard-editor-funcionarios.png)
 
 - Tabela editável com busca, mostrando papel atual (separador/conferente/operador/analista/inativo) e turno de cada colaborador.
 - Edição via dropdown, com botão único de "Salvar alterações" — sem risco de edição acidental.
 - Toda mudança é logada com data/hora, valor anterior e novo — auditável a qualquer momento pela própria interface.
 - Acesso restrito por chave mestra, pensado para correções pontuais que a automação sozinha não cobre.
 
+> Print também gerado a partir da base fictícia (`gerar_base_exemplo.py`), sem nenhum dado real.
+
+![Editor de funcionários](docs/dashboard-editor-funcionarios.png)
+
 ---
-
-
 
 ## 🛠️ Stack
 
@@ -130,35 +161,48 @@ dpapi_util.py → Windows DPAPI (vincula a senha mestra à conta + máquina)
 
 ## ▶️ Como rodar
 
+**Requisitos:** Python 3.11+ (recomendado 3.12 ou superior)
+
+```bash
+# 1. Clone o repositório e entre na pasta
+git clone https://github.com/leonardo-mirandac/produtividade-separacao.git
+cd produtividade-separacao
+
+# 2. Crie e ative um ambiente virtual (recomendado)
+python -m venv venv
+venv\Scripts\activate        # Windows
+source venv/bin/activate     # Linux/Mac
+
+# 3. Instale as dependências
+pip install -r requirements.txt
+```
+
 **Opção 1 — ver o dashboard funcionando agora, com dados fictícios (mais rápido):**
 
 ```bash
-pip install -r requirements.txt
-python gerar_base_exemplo.py     # gera base/historico_separacao.csv fictícia
-python indicadores_produtividade.py
-python gerar_painel_html.py       # abre painel_produtividade.html no navegador
+python src/scripts/gerar_base_exemplo.py     # gera base/historico_separacao.csv fictícia
+python src/scripts/indicadores_produtividade.py
+python src/scripts/gerar_painel_html.py       # gera painel_produtividade.html na raiz
 ```
 
 **Opção 2 — ciclo completo, com uma extração real de WMS:**
 
 ```bash
-pip install -r requirements.txt
-
 # 1. Configurar credenciais (uma vez)
-python criptografar_credenciais.py
+python src/utils/criptografar_credenciais.py
 
 # 2. Extrair dados do WMS
-python exportar_wms_produtividade.py
+python src/scripts/exportar_wms_produtividade.py
 
 # 3. Tratar e calcular indicadores
-python tratamento_produtividade.py
-python indicadores_produtividade.py
+python src/scripts/tratamento_produtividade.py
+python src/scripts/indicadores_produtividade.py
 
 # 4. Gerar o dashboard
-python gerar_painel_html.py
+python src/scripts/gerar_painel_html.py
 
 # 5. (Opcional) Editor de colaboradores
-streamlit run editor_funcionarios.py
+streamlit run src/scripts/editor_funcionarios.py
 ```
 
 > Este repositório não inclui nenhuma base de dados real. Os scripts esperam uma extração no formato descrito na seção **Estrutura de dados esperada** abaixo — ou use `gerar_base_exemplo.py` para gerar uma base fictícia no mesmo formato.
