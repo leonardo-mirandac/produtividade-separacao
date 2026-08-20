@@ -24,7 +24,7 @@ import streamlit as st
 
 import indicadores_produtividade as ip
 
-PASTA_SCRIPT = Path(__file__).resolve().parent
+PASTA_SCRIPT = Path(__file__).resolve().parent.parent.parent
 ARQUIVO_EXCECOES = PASTA_SCRIPT / "base" / "excecoes_funcionarios.json"
 ARQUIVO_LOG = PASTA_SCRIPT / "base" / "log_alteracoes.jsonl"
 

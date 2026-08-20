@@ -26,7 +26,7 @@ from cryptography.hazmat.primitives import hashes
 
 from senha_gui import pedir_senha_mestra_nova, _mostrar_erro
 
-PASTA_SCRIPT = Path(__file__).resolve().parent
+PASTA_SCRIPT = Path(__file__).resolve().parent.parent.parent
 ARQUIVO_CREDENCIAIS = PASTA_SCRIPT / "credenciais.enc"
 ARQUIVO_ENV_TEXTO_PURO = PASTA_SCRIPT / "env.env"  # arquivo de origem, em texto puro
 

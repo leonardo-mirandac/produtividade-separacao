@@ -36,7 +36,7 @@ VERSAO_SCRIPT = "2026-08-18-v10"  # confira essa linha pra saber se esta com a v
 # sem precisar editar caminho absoluto do Windows). Se preferir apontar pra
 # uma pasta fixa, use raw string: r"C:\Users\...\Extracoes" (o "r" na frente
 # evita o erro de unicode escape com \U, \A etc do Windows).
-PASTA_SCRIPT = Path(__file__).resolve().parent
+PASTA_SCRIPT = Path(__file__).resolve().parent.parent.parent
 PASTA_EXTRACOES = PASTA_SCRIPT / "extracoes"
 BASE_MESTRE = PASTA_SCRIPT / "base" / "historico_separacao.csv"
 CADASTRO_SEPARADORES = PASTA_SCRIPT / "base" / "cadastro_separadores.json"

@@ -19,7 +19,7 @@ import pandas as pd
 
 random.seed(42)
 
-PASTA_SCRIPT = Path(__file__).resolve().parent
+PASTA_SCRIPT = Path(__file__).resolve().parent.parent.parent
 SAIDA = PASTA_SCRIPT / "base" / "historico_separacao.csv"
 
 COLABORADORES = [

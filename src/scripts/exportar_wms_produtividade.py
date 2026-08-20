@@ -37,7 +37,7 @@ for _a in sys.argv[1:]:
     _argv_clean.append(_a)
 sys.argv = [sys.argv[0]] + _argv_clean
 
-_env_ler_path = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "env_ler.py")
+_env_ler_path = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "utils", "env_ler.py")
 _spec = _ilu.spec_from_file_location("env_ler", _env_ler_path)
 _env_ler_mod = _ilu.module_from_spec(_spec)
 _spec.loader.exec_module(_env_ler_mod)
@@ -50,7 +50,7 @@ SENHA       = _env.get("ERP_SENHA", "")
 TELA_BUSCA    = "WMS - Produtividade"
 HORA_INICIO_FILTRO = "00:00:00"  # hora que entra no campo de horario junto da data inicial
 
-PASTA_SCRIPT  = os.path.dirname(os.path.abspath(__file__))
+PASTA_SCRIPT  = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
 PASTA_SAIDA   = os.path.join(PASTA_SCRIPT, "extracoes")
 os.makedirs(PASTA_SAIDA, exist_ok=True)
 ARQUIVO_SAIDA = os.path.join(PASTA_SAIDA, f"base_separacao_{datetime.now().strftime('%Y%m%d')}.xls")

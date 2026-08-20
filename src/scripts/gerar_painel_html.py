@@ -26,7 +26,7 @@ import pandas as pd
 
 import indicadores_produtividade as ip
 
-PASTA_SCRIPT = Path(__file__).resolve().parent
+PASTA_SCRIPT = Path(__file__).resolve().parent.parent.parent
 SAIDA_HTML = PASTA_SCRIPT / "painel_produtividade.html"
 
 # Quantos dias de historico o HTML embute. Mais que isso incha o arquivo

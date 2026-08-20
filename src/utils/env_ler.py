@@ -17,7 +17,7 @@ from pathlib import Path
 from criptografar_credenciais import descriptografar
 from senha_gui import pedir_senha_mestra
 
-PASTA_SCRIPT = Path(__file__).resolve().parent
+PASTA_SCRIPT = Path(__file__).resolve().parent.parent.parent
 ARQUIVO_CREDENCIAIS = PASTA_SCRIPT / "credenciais.enc"
 ARQUIVO_SENHA_AUTOMATICA = PASTA_SCRIPT / "senha_automatica.dat"
 

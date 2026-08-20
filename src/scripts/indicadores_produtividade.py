@@ -27,7 +27,7 @@ from datetime import datetime, date, time
 
 import pandas as pd
 
-PASTA_SCRIPT = Path(__file__).resolve().parent
+PASTA_SCRIPT = Path(__file__).resolve().parent.parent.parent
 BASE_MESTRE = PASTA_SCRIPT / "base" / "historico_separacao.csv"
 ARQUIVO_EXCECOES = PASTA_SCRIPT / "base" / "excecoes_funcionarios.json"
 
